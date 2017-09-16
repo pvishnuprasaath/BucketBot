@@ -6,15 +6,31 @@ const functions = require('firebase-functions');
 const WELCOME_INTENT = 'input.welcome';  // the action name from the API.AI intent
 const TASK_INTENT = 'device.task';  // the action name from the API.AI intent
 // const NUMBER_ARGUMENT = 'input.mynum'; // the action name from the API.AI intent
+var list={
+  light:{
+    status:""
+  },
+  fan:{
+    status:""
+  }
+};
 
 function welcomeIntent (app) {
-  app.ask('Welcome to Bucket Bot!  Automate your actions over voice. What can i do for you?');
+  app.ask('Welcome to Bucket Home!  Automate your actions over voice. What can i do for you?');
 }
 
 function taskIntent (app) {
+  
   let device = app.getArgument('device');
   let action = app.getArgument('action');
-  app.tell(device +' switched ' + action + " succesfully ");
+  if(list[device].status==action){
+    app.ask(device +' is already switched ' + action + " ! Waiting for your next command.. ");
+
+  }else{
+    app.ask(device +' switched ' + action + " succesfully ! Waiting for your next command.. ");
+    list[device].status=action;
+  }
+ 
 }
 
 function defaultFallback (app) {
